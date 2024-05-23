@@ -1,11 +1,10 @@
 package web.service;
 
 public class LoginService {
-<<<<<<< HEAD
+
     public static boolean login(String username, String password) {
         return "admin".equals(username) && "admin".equals(password);
     }
-=======
 
 	/**
 	 * Static method returns true for successful login, false otherwise.
@@ -22,6 +21,5 @@ public class LoginService {
 		return false;
 	}
 	
-	
->>>>>>> branch 'master' of https://github.com/taopan2007/Task-9.1P.git
+
 }
