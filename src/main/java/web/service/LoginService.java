@@ -5,4 +5,3 @@ public class LoginService {
         return "admin".equals(username) && "admin".equals(password);
     }
 }
-//NEW COMMIT
