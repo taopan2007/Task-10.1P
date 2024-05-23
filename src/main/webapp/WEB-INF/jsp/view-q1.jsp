@@ -1,4 +1,6 @@
 <html>
+
+<head><title>Question 1: Addition</title></head>
 <body>
 
 <h2>Q1</h2>
