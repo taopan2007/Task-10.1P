@@ -16,4 +16,5 @@ public class MyServer extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(MyServer.class, args);
     }
+    //NEW COMMIT
 }
