@@ -3,10 +3,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <title>Feedback</title>
 </head>
 <body>
-    <h2>Welcome to OnTrack</h2>
-    <p>Please <a href="login">login</a> to submit your tasks and view feedback.</p>
+    <h2>Feedback</h2>
+    <c:forEach var="feedback" items="${feedbacks}">
+        <p>${feedback}</p>
+    </c:forEach>
 </body>
 </html>

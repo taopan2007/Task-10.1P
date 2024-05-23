@@ -10,7 +10,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import web.service.LoginService;
-import web.service.MathQuestionService;
+import web.service.TaskService;
+import web.service.FeedbackService;
 
 @Controller
 @RequestMapping("/")
@@ -18,119 +19,51 @@ public class RoutingServlet {
 
     @GetMapping("/")
     public String welcome() {
-        System.out.println("Welcome ...");
         return "view-welcome";
     }
 
     @GetMapping("/login")
     public String loginView() {
-        System.out.println("login view...");
         return "view-login";
     }
 
     @PostMapping("/login")
     public RedirectView login(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        System.out.println("login form...");
         String username = request.getParameter("username");
         String password = request.getParameter("passwd");
-        String dob = request.getParameter("dob");
 
-        System.out.println("Username/password: " + username + ", " + password);
 
-        RedirectView redirectView = null;
-        if (LoginService.login(username, password, dob)) {
-            redirectView = new RedirectView("/q1", true);
+        if (LoginService.login(username, password)) {
+            return new RedirectView("/submit-task", true);
         } else {
-            // Login failed, stay with login page.
-            redirectView = new RedirectView("/login", true);
-            // Show error message
-            redirectAttributes.addFlashAttribute("message", "Incorrect credentials.");
+            redirectAttributes.addFlashAttribute("message", "Login Failed");
+            return new RedirectView("/login", true);
         }
-
-        return redirectView;
     }
 
-    @GetMapping("/q1")
-    public String q1View() {
-        System.out.println("q1 view...");
-        return "view-q1";
+    @GetMapping("/submit-task")
+    public String submitTaskView() {
+        return "view-submit-task";
     }
 
-    @PostMapping("/q1")
-    public RedirectView q1(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        System.out.println("q1 form...");
-        String number1 = request.getParameter("number1");
-        String number2 = request.getParameter("number2");
-        String resultUser = request.getParameter("result");
+    @PostMapping("/submit-task")
+    public RedirectView submitTask(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String file = request.getParameter("file");
 
-        double calculatedResult = MathQuestionService.q1Addition(number1, number2);
-        System.out.println("User result: " + resultUser + ", answer: " + calculatedResult);
-
-        RedirectView redirectView = null;
-        if (calculatedResult == Double.valueOf(resultUser)) {
-            redirectView = new RedirectView("/q2", true);
+        if (TaskService.submitTask(title, description, file)) {
+            redirectAttributes.addFlashAttribute("message", "Task submitted successfully.");
+            return new RedirectView("/feedback", true);
         } else {
-            // Q1 wrong.
-            redirectView = new RedirectView("/q1", true);
-            // Show error message
-            redirectAttributes.addFlashAttribute("message", "Wrong answer, try again.");
+            redirectAttributes.addFlashAttribute("message", "Task submission failed.");
+            return new RedirectView("/submit-task", true);
         }
-        return redirectView;
     }
 
-    @GetMapping("/q2")
-    public String q2View() {
-        System.out.println("q2 view...");
-        return "view-q2";
-    }
-
-    @PostMapping("/q2")
-    public RedirectView q2(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        System.out.println("q2 form...");
-        String number1 = request.getParameter("number1");
-        String number2 = request.getParameter("number2");
-        String resultUser = request.getParameter("result");
-
-        double calculatedResult = MathQuestionService.q2Subtraction(number1, number2);
-        System.out.println("User result: " + resultUser + ", answer: " + calculatedResult);
-
-        RedirectView redirectView = null;
-        if (calculatedResult == Double.valueOf(resultUser)) {
-            redirectView = new RedirectView("/q3", true);
-        } else {
-            // Q2 wrong
-            redirectView = new RedirectView("/q2", true);
-            // Show error message
-            redirectAttributes.addFlashAttribute("message", "Wrong answer, try again.");
-        }
-        return redirectView;
-    }
-
-    @GetMapping("/q3")
-    public String q3View() {
-        System.out.println("q3 view...");
-        return "view-q3";
-    }
-
-    @PostMapping("/q3")
-    public RedirectView q3(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        System.out.println("q3 form...");
-        String number1 = request.getParameter("number1");
-        String number2 = request.getParameter("number2");
-        String resultUser = request.getParameter("result");
-
-        Double calculatedResult = MathQuestionService.q3Multiplication(number1, number2);
-        System.out.println("User result: " + resultUser + ", answer: " + calculatedResult);
-
-        RedirectView redirectView = null;
-        if (calculatedResult != null && calculatedResult.equals(Double.valueOf(resultUser))) {
-            redirectView = new RedirectView("/success", true); // Assuming you have a success page
-        } else {
-            // Q3 wrong.
-            redirectView = new RedirectView("/q3", true);
-            // Show error message
-            redirectAttributes.addFlashAttribute("message", "Wrong answer, try again.");
-        }
-        return redirectView;
+    @GetMapping("/feedback")
+    public String feedbackView(HttpServletRequest request) {
+        request.setAttribute("feedbacks", FeedbackService.getFeedbacks());
+        return "view-feedback";
     }
 }

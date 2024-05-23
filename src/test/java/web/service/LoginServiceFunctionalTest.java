@@ -27,31 +27,26 @@ public class LoginServiceFunctionalTest {
     public void testLoginSuccess() {
         WebElement usernameField = driver.findElement(By.id("username"));
         WebElement passwordField = driver.findElement(By.id("passwd"));
-        WebElement dobField = driver.findElement(By.id("dob"));
         WebElement submitButton = driver.findElement(By.xpath("//input[@type='submit']"));
-
         usernameField.sendKeys("admin");
         passwordField.sendKeys("admin");
-        dobField.sendKeys("1990-01-01");
         submitButton.click();
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.urlContains("q1"));
+        wait.until(ExpectedConditions.urlContains("submit-task"));
 
         String pageTitle = driver.getTitle();
-        assertEquals("Question 1: Addition", pageTitle);
+        assertEquals("Submit Task", pageTitle);
     }
 
     @Test
     public void testLoginFailure() {
         WebElement usernameField = driver.findElement(By.id("username"));
         WebElement passwordField = driver.findElement(By.id("passwd"));
-        WebElement dobField = driver.findElement(By.id("dob"));
         WebElement submitButton = driver.findElement(By.xpath("//input[@type='submit']"));
 
         usernameField.sendKeys("admin");
         passwordField.sendKeys("wrongpassword");
-        dobField.sendKeys("1990-01-01");
         submitButton.click();
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
